@@ -20,6 +20,7 @@ public class MyDBBookmarkHandler extends SQLiteOpenHelper {
     public static final String TABLE_BOOKMARK = "bookmarks";//name of table
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_NAME = "url";
+    public static final String COLUMN_TITLE = "title";
 
     public MyDBBookmarkHandler(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -28,7 +29,9 @@ public class MyDBBookmarkHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE " + TABLE_BOOKMARK + "(" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT " + ")";
+                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_NAME + " TEXT, " +
+                COLUMN_TITLE + " TEXT " + ")";
         db.execSQL(query);
     }
 
@@ -41,8 +44,9 @@ public class MyDBBookmarkHandler extends SQLiteOpenHelper {
     public void addUrl(Website website) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, website.get_url());
+        values.put(COLUMN_TITLE, website.getTitle());
         SQLiteDatabase db = getWritableDatabase();
-        long i = db.insert(TABLE_BOOKMARK, null, values);
+        db.insert(TABLE_BOOKMARK, null, values);
         db.close();
     }
 
@@ -52,24 +56,22 @@ public class MyDBBookmarkHandler extends SQLiteOpenHelper {
     }
 
     @SuppressLint("Range")
-    public List<String> databaseToString() {
+    public List<Website> databaseToString() {
         SQLiteDatabase db = getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_BOOKMARK;
 
-        List<String> dbString = new ArrayList<>();
+        List<Website> websites = new ArrayList<>();
         Cursor c = db.rawQuery(query, null);
         c.moveToFirst();
 
-        int i = 0;
         if (c.moveToNext()) {
             do {
                 if (c.getString(c.getColumnIndex(COLUMN_NAME)) != null) {
-                    String bsString = "";
-                    bsString = c.getString(c.getColumnIndex("url"));
-                    dbString.add(bsString);
+                    Website website = new Website(c.getString(c.getColumnIndex("url")),c.getString(c.getColumnIndex("title")));
+                    websites.add(website);
                 }
             } while (c.moveToNext());
         }
-        return dbString;
+        return websites;
     }
 }

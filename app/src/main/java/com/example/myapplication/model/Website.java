@@ -15,8 +15,9 @@ public class Website {
         this.title = title;
     }
 
-    public Website(String url) {
+    public Website(String url, String title) {
         this._url = url;
+        this.title = title;
     }
 
     public int get_id() {
