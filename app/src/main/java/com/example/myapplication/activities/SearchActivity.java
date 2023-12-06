@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -13,14 +14,17 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.myapplication.NetworkStateReceiver;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.HistoryAdapter;
 import com.example.myapplication.adapters.SearchResultAdapter;
 import com.example.myapplication.http.GoogleCustomSearchApi;
 import com.example.myapplication.listeners.OnItemSearchResultClickListener;
 import com.example.myapplication.model.SearchResult;
+import com.google.android.material.button.MaterialButton;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -34,10 +38,13 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity  implements  NetworkStateReceiver.NetworkStateReceiverListener {
     private EditText edtSearch;
     private TextView txtClean;
     private RecyclerView rc;
+    RelativeLayout NointernetLayout;
+    MaterialButton Reload;
+    private NetworkStateReceiver networkStateReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +76,41 @@ public class SearchActivity extends AppCompatActivity {
         edtSearch = findViewById(R.id.edt_search);
         txtClean = findViewById(R.id.txt_search_clean);
         rc = findViewById(R.id.rc_search_result);
+        NointernetLayout = findViewById(R.id.NoInternetLayout);
+        Reload = findViewById(R.id.reloadid);
+
+        startNetworkBroadcastReceiver(this);
 
         setStatusSearchBar(edtSearch, true);
     }
+
+
+    public void startNetworkBroadcastReceiver(Context currentContext) {
+        networkStateReceiver = new NetworkStateReceiver();
+        networkStateReceiver.addListener((NetworkStateReceiver.NetworkStateReceiverListener) currentContext);
+        registerNetworkBroadcastReceiver(currentContext);
+    }
+
+    public void registerNetworkBroadcastReceiver(Context currentContext) {
+        currentContext.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    public void unregisterNetworkBroadcastReceiver(Context currentContext) {
+        currentContext.unregisterReceiver(networkStateReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        registerNetworkBroadcastReceiver(this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterNetworkBroadcastReceiver(this);
+        super.onPause();
+    }
+
 
     private void initEvent() {
         txtClean.setOnClickListener(new View.OnClickListener() {
@@ -195,5 +234,18 @@ public class SearchActivity extends AppCompatActivity {
             e.printStackTrace();
             return null;
         }
+    }
+
+
+    @Override
+    public void networkAvailable() {
+        rc.setVisibility(View.VISIBLE);
+        NointernetLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void networkUnavailable() {
+        rc.setVisibility(View.GONE);
+        NointernetLayout.setVisibility(View.VISIBLE);
     }
 }
