@@ -62,14 +62,14 @@
             android:layout_height="match_parent"
             android:padding="15dp"
             android:src="@drawable/ic_bookmark"
-            app:layout_constraintEnd_toStartOf="@id/custom_actionbar_browser_reload" />
+            app:layout_constraintEnd_toStartOf="@id/custom_actionbar_browser_more" />
 
         <ImageView
-            android:id="@+id/custom_actionbar_browser_reload"
+            android:id="@+id/custom_actionbar_browser_more"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
             android:padding="15dp"
-            android:src="@drawable/ic_refresh"
+            android:src="@drawable/ic_dots"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.Toolbar>

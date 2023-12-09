@@ -19,6 +19,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.adapters.BookmarkAdapter;
 import com.example.myapplication.adapters.HistoryAdapter;
 import com.example.myapplication.dbhandler.MyDBBookmarkHandler;
+import com.example.myapplication.dialogs.ConfirmationDialog;
 import com.example.myapplication.listeners.OnItemBookmarkClickListener;
 import com.example.myapplication.model.Website;
 
@@ -29,7 +30,7 @@ public class BookmarkActivity extends AppCompatActivity implements OnItemBookmar
     private RecyclerView recyclerView;
     private List<Website> bookmarks;
     private BookmarkAdapter adapter;
-    private ImageView imgBack;
+    private ImageView imgBack, imgClear;
     private TextView txtTitle;
 
     @SuppressLint("MissingInflatedId")
@@ -47,6 +48,13 @@ public class BookmarkActivity extends AppCompatActivity implements OnItemBookmar
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+        imgClear = findViewById(R.id.custom_actionbar_title_clear);
+        imgClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                ConfirmationDialog.showConfirmationDialog(Requer,"Delete all favorites","Are you sure you want to delete your entire favorites list?");
             }
         });
         txtTitle = findViewById(R.id.custom_actionbar_title_name);

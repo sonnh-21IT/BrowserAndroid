@@ -1,7 +1,6 @@
 plugins {
     id("com.android.application")
 }
-
 android {
     namespace = "com.example.myapplication"
     compileSdk = 34
@@ -9,7 +8,7 @@ android {
     defaultConfig {
         applicationId = "com.example.myapplication"
         minSdk = 29
-        targetSdk = 33
+        targetSdk = 31
         versionCode = 1
         versionName = "1.0"
 
@@ -29,6 +28,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
 }
 
 dependencies {
@@ -44,6 +44,5 @@ dependencies {
     implementation("com.loopj.android:android-async-http:1.4.10")
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
-
 
 }
