@@ -32,7 +32,14 @@
             android:paddingHorizontal="15dp"
             android:text=""
             android:textSize="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/custom_actionbar_title_clear"
             app:layout_constraintStart_toEndOf="@id/custom_actionbar_title_back" />
+        <ImageView
+            android:id="@+id/custom_actionbar_title_clear"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            android:src="@drawable/ic_clear_all"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.Toolbar>

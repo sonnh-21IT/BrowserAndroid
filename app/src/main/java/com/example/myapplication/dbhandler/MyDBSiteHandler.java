@@ -68,11 +68,16 @@ public class MyDBSiteHandler extends SQLiteOpenHelper {
         if (c.moveToNext()) {
             do {
                 if (c.getString(c.getColumnIndex(COLUMN_NAME)) != null) {
-                    Website website = new Website(c.getString(c.getColumnIndex("url")),c.getString(c.getColumnIndex("title")));
+                    Website website = new Website(c.getString(c.getColumnIndex("url")), c.getString(c.getColumnIndex("title")));
                     websites.add(website);
                 }
             } while (c.moveToNext());
         }
         return websites;
+    }
+
+    public void clearHistory() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_SITES);
     }
 }

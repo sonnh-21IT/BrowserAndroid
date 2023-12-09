@@ -29,7 +29,6 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:text="Chrome"
-                android:textColor="@color/black"
                 android:textSize="18dp" />
 
             <TextView
@@ -41,8 +40,8 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:text="Chrome"
-                android:textColor="@color/black" />
+                android:textColor="@color/purple_500"
+                android:text="Chrome" />
         </LinearLayout>
     </LinearLayout>
 

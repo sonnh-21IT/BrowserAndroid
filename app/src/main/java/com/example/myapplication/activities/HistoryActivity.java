@@ -25,7 +25,7 @@ public class HistoryActivity extends AppCompatActivity implements OnItemHistoryC
     private RecyclerView recyclerView;
     private List<Website> histories;
     private HistoryAdapter adapter;
-    private ImageView imgBack;
+    private ImageView imgBack,imgClear;
     private TextView txtTitle;
 
     @Override
@@ -41,6 +41,15 @@ public class HistoryActivity extends AppCompatActivity implements OnItemHistoryC
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+        imgClear = findViewById(R.id.custom_actionbar_title_clear);
+        imgClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDBSiteHandler.clearHistory();
+                setAdapter();
+                Toast.makeText(HistoryActivity.this, "Deleted all history", Toast.LENGTH_SHORT).show();
             }
         });
         txtTitle = findViewById(R.id.custom_actionbar_title_name);

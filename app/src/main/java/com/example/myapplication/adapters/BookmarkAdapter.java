@@ -1,5 +1,6 @@
 package com.example.myapplication.adapters;
 
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
         }
         holder.txtTitle.setText(website.getTitle());
         holder.txtUrl.setText(website.get_url());
+        holder.txtUrl.setPaintFlags(holder.txtUrl.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override

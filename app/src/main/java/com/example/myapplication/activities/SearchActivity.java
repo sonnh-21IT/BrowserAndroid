@@ -21,6 +21,7 @@ import com.example.myapplication.adapters.SearchResultAdapter;
 import com.example.myapplication.http.GoogleCustomSearchApi;
 import com.example.myapplication.listeners.OnItemSearchResultClickListener;
 import com.example.myapplication.model.SearchResult;
+import com.example.myapplication.utils.Utils;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -78,7 +79,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 edtSearch.setText("");
-                setStatusSearchBar(edtSearch,true);
+                setStatusSearchBar(edtSearch, true);
             }
         });
 
@@ -94,12 +95,20 @@ public class SearchActivity extends AppCompatActivity {
                             if (searchString.contains("http") || searchString.contains("https")) {
 //                                webView.loadUrl(address);
 //                                go to activity browser with address
+                                Intent intent = new Intent(SearchActivity.this, BrowserActivity.class);
+                                intent.putExtra("success", "load");
+                                intent.putExtra("url", searchString);
+                                startActivity(intent);
                             } else {
 //                                webView.loadUrl("http://" + address);
 //                                go to activity browser with "http://" + address
+                                Intent intent = new Intent(SearchActivity.this, BrowserActivity.class);
+                                intent.putExtra("success", "load");
+                                intent.putExtra("url", "http://" + searchString);
+                                startActivity(intent);
                             }
                         } else {
-                            GoogleCustomSearchApi.search(searchString,10, new JsonHttpResponseHandler() {
+                            GoogleCustomSearchApi.search(searchString, 10, new JsonHttpResponseHandler() {
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                     try {
@@ -125,7 +134,7 @@ public class SearchActivity extends AppCompatActivity {
                                             }
 
                                             //domain
-                                            String domain = getDomain(url);
+                                            String domain = Utils.getDomain(url);
 
                                             SearchResult searchResult = new SearchResult();
                                             searchResult.setTitle(title);
@@ -136,17 +145,13 @@ public class SearchActivity extends AppCompatActivity {
                                                 searchResult.setDomain(domain);
                                             }
                                             list.add(searchResult);
-                                            Log.d("success", searchResult.getTitle() + searchResult.getUrl() + searchResult.getImgUrl() + searchResult.getSnippet() + searchResult.getDomain());
                                         }
                                         SearchResultAdapter adapter = new SearchResultAdapter(list, new OnItemSearchResultClickListener() {
                                             @Override
                                             public void onCLick(String title, String url) {
                                                 Intent intent = new Intent(SearchActivity.this, BrowserActivity.class);
-                                                intent.putExtra("success","success");
-                                                intent.putExtra("url",url);
-                                                intent.putExtra("title",title);
-                                                String domain = getDomain(url.trim());
-                                                intent.putExtra("domain",domain);
+                                                intent.putExtra("success", "search");
+                                                intent.putExtra("url", url);
                                                 startActivity(intent);
                                             }
                                         });
@@ -175,25 +180,5 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
             }
         });
-    }
-
-    public static String getDomain(String urlString) {
-        try {
-            // Chuyển đổi đường dẫn URL thành đối tượng URL
-            URL url = new URL(urlString);
-
-            // Lấy host từ URL
-            String host = url.getHost();
-
-            // Kiểm tra xem host có bắt đầu bằng "www." không và loại bỏ nếu có
-            if (host.startsWith("www.")) {
-                host = host.substring(4);
-            }
-
-            return host;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }
