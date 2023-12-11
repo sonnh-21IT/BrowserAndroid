@@ -8,18 +8,15 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.BookmarkAdapter;
-import com.example.myapplication.adapters.HistoryAdapter;
 import com.example.myapplication.dbhandler.MyDBBookmarkHandler;
 import com.example.myapplication.dialogs.ConfirmationDialog;
+import com.example.myapplication.listeners.ConfirmationDialogListener;
 import com.example.myapplication.listeners.OnItemBookmarkClickListener;
 import com.example.myapplication.model.Website;
 
@@ -54,7 +51,13 @@ public class BookmarkActivity extends AppCompatActivity implements OnItemBookmar
         imgClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ConfirmationDialog.showConfirmationDialog(Requer,"Delete all favorites","Are you sure you want to delete your entire favorites list?");
+                ConfirmationDialog.showConfirmationDialog(BookmarkActivity.this, "Delete all favorite", "Are you sure you want to delete the entire favorites list?", new ConfirmationDialogListener() {
+                    @Override
+                    public void onConfirm() {
+                        myDBBookmarkHandler.clearBookmark();
+                        Toast.makeText(BookmarkActivity.this, "Deleted all favorite", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         txtTitle = findViewById(R.id.custom_actionbar_title_name);
@@ -83,6 +86,7 @@ public class BookmarkActivity extends AppCompatActivity implements OnItemBookmar
     @Override
     public void onOpen(String url) {
         Intent intent = new Intent(BookmarkActivity.this, BrowserActivity.class);
+        intent.putExtra("success", "favorite");
         intent.putExtra("url", url);
         startActivity(intent);
     }
@@ -96,6 +100,12 @@ public class BookmarkActivity extends AppCompatActivity implements OnItemBookmar
 
     @Override
     public void onShare(String url) {
-
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        String body = "Sharing";
+        String sub = url;
+        intent.putExtra(Intent.EXTRA_TEXT, body);
+        intent.putExtra(Intent.EXTRA_TEXT, sub);
+        startActivity(Intent.createChooser(intent, "share using"));
     }
 }

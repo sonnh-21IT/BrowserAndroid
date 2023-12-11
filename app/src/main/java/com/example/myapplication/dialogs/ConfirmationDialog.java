@@ -1,10 +1,8 @@
 package com.example.myapplication.dialogs;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -23,6 +21,7 @@ public class ConfirmationDialog {
         TextView messageTextView = customView.findViewById(R.id.custom_dialog_content);
         TextView actionYES = customView.findViewById(R.id.custom_dialog_action_yes);
         TextView actionNO = customView.findViewById(R.id.custom_dialog_action_no);
+        TextView close = customView.findViewById(R.id.custom_dialog_close);
 
         // Đặt nội dung cho tiêu đề và nội dung
         titleTextView.setText(title);
@@ -52,6 +51,13 @@ public class ConfirmationDialog {
             @Override
             public void onClick(View v) {
                 dialog.dismiss(); // Đóng dialog sau khi hủy
+            }
+        });
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
     }

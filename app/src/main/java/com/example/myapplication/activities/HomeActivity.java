@@ -29,6 +29,7 @@ public class HomeActivity extends AppCompatActivity {
     private EditText edtHome;
     private TextView txtMic;
     private ImageView imgAvt, imgMore, imgQRCode;
+    private ImageView goFacebook, goYoutube, goInstagram, goLinkedin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,11 @@ public class HomeActivity extends AppCompatActivity {
         imgAvt = findViewById(R.id.img_custom_actionbar_home_avt);
         imgMore = findViewById(R.id.img_custom_actionbar_home_more);
         imgQRCode = findViewById(R.id.img_custom_actionbar_home_qr);
+
+        goFacebook = findViewById(R.id.img_to_facebook);
+        goYoutube = findViewById(R.id.img_to_youtube);
+        goInstagram = findViewById(R.id.img_to_instagram);
+        goLinkedin = findViewById(R.id.img_to_linkedin);
 
         edtHome.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -71,6 +77,43 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, ScanQRCodeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        goYoutube.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, BrowserActivity.class);
+                intent.putExtra("success", "search");
+                intent.putExtra("url", "https://www.youtube.com/");
+                startActivity(intent);
+            }
+        });
+        goFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, BrowserActivity.class);
+                intent.putExtra("success", "search");
+                intent.putExtra("url", "https://www.facebook.com/");
+                startActivity(intent);
+            }
+        });
+        goInstagram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, BrowserActivity.class);
+                intent.putExtra("success", "search");
+                intent.putExtra("url", "https://www.instagram.com/");
+                startActivity(intent);
+            }
+        });
+        goLinkedin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, BrowserActivity.class);
+                intent.putExtra("success", "search");
+                intent.putExtra("url", "https://www.linkedin.com/");
                 startActivity(intent);
             }
         });

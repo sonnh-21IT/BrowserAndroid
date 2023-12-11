@@ -15,6 +15,8 @@ import com.example.myapplication.R;
 import com.example.myapplication.adapters.HistoryAdapter;
 import com.example.myapplication.dbhandler.MyDBBookmarkHandler;
 import com.example.myapplication.dbhandler.MyDBSiteHandler;
+import com.example.myapplication.dialogs.ConfirmationDialog;
+import com.example.myapplication.listeners.ConfirmationDialogListener;
 import com.example.myapplication.listeners.OnItemHistoryClickListener;
 import com.example.myapplication.model.Website;
 
@@ -47,9 +49,13 @@ public class HistoryActivity extends AppCompatActivity implements OnItemHistoryC
         imgClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myDBSiteHandler.clearHistory();
-                setAdapter();
-                Toast.makeText(HistoryActivity.this, "Deleted all history", Toast.LENGTH_SHORT).show();
+                ConfirmationDialog.showConfirmationDialog(HistoryActivity.this, "Delete all history", "Are you sure you want to delete the entire histories list?", new ConfirmationDialogListener() {
+                    @Override
+                    public void onConfirm() {
+                        myDBSiteHandler.clearHistory();
+                        Toast.makeText(HistoryActivity.this, "Deleted all history", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         txtTitle = findViewById(R.id.custom_actionbar_title_name);
@@ -76,6 +82,7 @@ public class HistoryActivity extends AppCompatActivity implements OnItemHistoryC
     @Override
     public void onOpen(String url) {
         Intent intent = new Intent(HistoryActivity.this, BrowserActivity.class);
+        intent.putExtra("success", "history");
         intent.putExtra("url", url);
         startActivity(intent);
     }

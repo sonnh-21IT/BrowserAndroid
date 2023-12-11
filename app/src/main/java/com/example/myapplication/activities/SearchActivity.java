@@ -93,15 +93,11 @@ public class SearchActivity extends AppCompatActivity {
                         boolean isLoad = searchString.contains(".com") || searchString.contains(".net") || searchString.contains(".in");
                         if (isLoad) {
                             if (searchString.contains("http") || searchString.contains("https")) {
-//                                webView.loadUrl(address);
-//                                go to activity browser with address
                                 Intent intent = new Intent(SearchActivity.this, BrowserActivity.class);
                                 intent.putExtra("success", "load");
                                 intent.putExtra("url", searchString);
                                 startActivity(intent);
                             } else {
-//                                webView.loadUrl("http://" + address);
-//                                go to activity browser with "http://" + address
                                 Intent intent = new Intent(SearchActivity.this, BrowserActivity.class);
                                 intent.putExtra("success", "load");
                                 intent.putExtra("url", "http://" + searchString);
