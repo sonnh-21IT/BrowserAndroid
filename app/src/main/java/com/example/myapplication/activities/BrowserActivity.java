@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.example.myapplication.R;
 import com.example.myapplication.dbhandler.MyDBBookmarkHandler;
 import com.example.myapplication.dbhandler.MyDBSiteHandler;
+import com.example.myapplication.model.User;
 import com.example.myapplication.model.Website;
 import com.example.myapplication.utils.Utils;
 
@@ -50,6 +51,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import io.paperdb.Paper;
 
 public class BrowserActivity extends AppCompatActivity {
     private ImageView imgClose, imgShare, imgBookMark, imgMore;
@@ -68,6 +71,8 @@ public class BrowserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browser);
+        Paper.init(this);
+
         initView();
         setEvent();
 
@@ -91,10 +96,15 @@ public class BrowserActivity extends AppCompatActivity {
         imgBookMark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Website website = new Website(webView.getUrl(), webView.getTitle());
-                MyDBBookmarkHandler myDBBookmarkHandler = new MyDBBookmarkHandler(BrowserActivity.this, null, null, 1);
-                myDBBookmarkHandler.addUrl(website);
-                Toast.makeText(BrowserActivity.this, "Added a page path to favorites", Toast.LENGTH_SHORT).show();
+                User user = Paper.book().read("current");
+                if (user != null) {
+                    Website website = new Website(webView.getUrl(), webView.getTitle());
+                    MyDBBookmarkHandler myDBBookmarkHandler = new MyDBBookmarkHandler(BrowserActivity.this, null, null, 1);
+                    myDBBookmarkHandler.addUrl(website, user.getId());
+                    Toast.makeText(BrowserActivity.this, "Added a page path to favorites", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(BrowserActivity.this, "Please log in to perform this action", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         imgClose.setOnClickListener(new View.OnClickListener() {
@@ -214,9 +224,13 @@ public class BrowserActivity extends AppCompatActivity {
             }
 
             private void saveToHistory(String url, String title) {
+
                 Website website = new Website(url, title);
                 MyDBSiteHandler myDBSiteHandler = new MyDBSiteHandler(BrowserActivity.this, null, null, 1);
-                myDBSiteHandler.addUrl(website);
+                User user = Paper.book().read("current");
+                if (user != null) {
+                    myDBSiteHandler.addUrl(website, user.getId());
+                }
             }
 
             private boolean containsDot(String title) {

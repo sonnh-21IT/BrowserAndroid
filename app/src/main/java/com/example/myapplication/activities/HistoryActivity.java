@@ -18,22 +18,27 @@ import com.example.myapplication.dbhandler.MyDBSiteHandler;
 import com.example.myapplication.dialogs.ConfirmationDialog;
 import com.example.myapplication.listeners.ConfirmationDialogListener;
 import com.example.myapplication.listeners.OnItemHistoryClickListener;
+import com.example.myapplication.model.User;
 import com.example.myapplication.model.Website;
 
 import java.util.List;
+
+import io.paperdb.Paper;
 
 public class HistoryActivity extends AppCompatActivity implements OnItemHistoryClickListener {
     private MyDBSiteHandler myDBSiteHandler = new MyDBSiteHandler(this, null, null, 1);
     private RecyclerView recyclerView;
     private List<Website> histories;
     private HistoryAdapter adapter;
-    private ImageView imgBack,imgClear;
+    private ImageView imgBack, imgClear;
     private TextView txtTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        Paper.init(this);
+
         initView();
     }
 
@@ -52,8 +57,11 @@ public class HistoryActivity extends AppCompatActivity implements OnItemHistoryC
                 ConfirmationDialog.showConfirmationDialog(HistoryActivity.this, "Delete all history", "Are you sure you want to delete the entire histories list?", new ConfirmationDialogListener() {
                     @Override
                     public void onConfirm() {
-                        myDBSiteHandler.clearHistory();
-                        Toast.makeText(HistoryActivity.this, "Deleted all history", Toast.LENGTH_SHORT).show();
+                        User user = Paper.book().read("current");
+                        if (user != null) {
+                            myDBSiteHandler.clearHistory(user.getId());
+                            Toast.makeText(HistoryActivity.this, "Deleted all history", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
@@ -70,13 +78,16 @@ public class HistoryActivity extends AppCompatActivity implements OnItemHistoryC
     }
 
     private void setAdapter() {
-        histories = myDBSiteHandler.databaseToString();
-        adapter = new HistoryAdapter(histories, this);
+        User user = Paper.book().read("current");
+        if (user != null) {
+            histories = myDBSiteHandler.databaseToString(user.getId());
+            adapter = new HistoryAdapter(histories, this);
 
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     @Override
@@ -89,9 +100,12 @@ public class HistoryActivity extends AppCompatActivity implements OnItemHistoryC
 
     @Override
     public void onDelete(String url) {
-        myDBSiteHandler.deleteUrl(url);
-        setAdapter();
-        Toast.makeText(this, "Removed a page path from history", Toast.LENGTH_SHORT).show();
+        User user = Paper.book().read("current");
+        if (user != null) {
+            myDBSiteHandler.deleteUrl(url, user.getId());
+            setAdapter();
+            Toast.makeText(this, "Removed a page path from history", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -107,9 +121,12 @@ public class HistoryActivity extends AppCompatActivity implements OnItemHistoryC
 
     @Override
     public void onBookmark(String url, String title) {
-        MyDBBookmarkHandler myDBBookmarkHandler = new MyDBBookmarkHandler(this, null, null, 1);
-        Website website = new Website(url, url);
-        myDBBookmarkHandler.addUrl(website);
-        Toast.makeText(HistoryActivity.this, "Added a page path to favorites", Toast.LENGTH_SHORT).show();
+        User user = Paper.book().read("current");
+        if (user!=null){
+            MyDBBookmarkHandler myDBBookmarkHandler = new MyDBBookmarkHandler(this, null, null, 1);
+            Website website = new Website(url, url);
+            myDBBookmarkHandler.addUrl(website,user.getId());
+            Toast.makeText(HistoryActivity.this, "Added a page path to favorites", Toast.LENGTH_SHORT).show();
+        }
     }
 }

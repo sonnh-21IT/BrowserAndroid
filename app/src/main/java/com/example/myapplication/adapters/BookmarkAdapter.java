@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
@@ -73,13 +72,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
     }
 
     private void setEvent(View popupView, PopupWindow popupWindow, String url, String title) {
-        popupView.findViewById(R.id.menu_website_book_mark).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Added a page path to favorites", Toast.LENGTH_SHORT).show();
-                popupWindow.dismiss();
-            }
-        });
+        popupView.findViewById(R.id.menu_website_book_mark).setVisibility(View.GONE);
         popupView.findViewById(R.id.menu_website_reopen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
