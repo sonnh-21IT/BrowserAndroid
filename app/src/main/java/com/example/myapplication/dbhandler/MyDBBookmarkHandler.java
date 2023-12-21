@@ -21,6 +21,7 @@ public class MyDBBookmarkHandler extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_NAME = "url";
     public static final String COLUMN_TITLE = "title";
+    public static final String COLUMN_USER_ID = "userid";
 
     public MyDBBookmarkHandler(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -31,7 +32,8 @@ public class MyDBBookmarkHandler extends SQLiteOpenHelper {
         String query = "CREATE TABLE " + TABLE_BOOKMARK + "(" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_NAME + " TEXT, " +
-                COLUMN_TITLE + " TEXT " + ")";
+                COLUMN_TITLE + " TEXT, " +
+                COLUMN_USER_ID + " LONG " + ")";
         db.execSQL(query);
     }
 
@@ -41,24 +43,25 @@ public class MyDBBookmarkHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addUrl(Website website) {
+    public void addUrl(Website website, long id) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, website.get_url());
         values.put(COLUMN_TITLE, website.getTitle());
+        values.put(COLUMN_USER_ID, id);
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_BOOKMARK, null, values);
         db.close();
     }
 
-    public void deleteUrl(String urlName) {
+    public void deleteUrl(String urlName, long id) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_BOOKMARK + " WHERE " + COLUMN_NAME + " = \"" + urlName + "\";");
+        db.execSQL("DELETE FROM " + TABLE_BOOKMARK + " WHERE " + COLUMN_NAME + " = \"" + urlName + "\" AND " + COLUMN_USER_ID + " = " + id + " ;");
     }
 
     @SuppressLint("Range")
-    public List<Website> databaseToString() {
+    public List<Website> databaseToString(long id) {
         SQLiteDatabase db = getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_BOOKMARK;
+        String query = "SELECT * FROM " + TABLE_BOOKMARK + " WHERE " + COLUMN_USER_ID + " = " + id;
 
         List<Website> websites = new ArrayList<>();
         Cursor c = db.rawQuery(query, null);
@@ -75,8 +78,8 @@ public class MyDBBookmarkHandler extends SQLiteOpenHelper {
         return websites;
     }
 
-    public void clearBookmark() {
+    public void clearBookmark(long id) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_BOOKMARK);
+        db.execSQL("DELETE FROM " + TABLE_BOOKMARK + " WHERE " + COLUMN_USER_ID + " = " + id);
     }
 }

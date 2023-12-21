@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.adapters.HistoryAdapter;
 import com.example.myapplication.adapters.SearchResultAdapter;
 import com.example.myapplication.http.GoogleCustomSearchApi;
 import com.example.myapplication.listeners.OnItemSearchResultClickListener;
@@ -28,8 +27,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
