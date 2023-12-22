@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitInstance {
     private static Retrofit retrofit;
-    private static final String domain = "192.168.111.141";
+    private static final String domain = "192.168.110.143";
 
     public static Retrofit getRetrofit() {
         if (retrofit == null) {

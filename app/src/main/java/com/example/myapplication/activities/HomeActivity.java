@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -53,7 +54,6 @@ public class HomeActivity extends AppCompatActivity {
         imgAvt = findViewById(R.id.img_custom_actionbar_home_avt);
         imgMore = findViewById(R.id.img_custom_actionbar_home_more);
         imgQRCode = findViewById(R.id.img_custom_actionbar_home_qr);
-//        imgUser = findViewById(R.id.img_custom_actionbar_home_user);
 
         txtName = findViewById(R.id.txt_name_main_home);
         User user = Paper.book().read("current");
@@ -95,41 +95,6 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//        imgUser.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                User user = Paper.book().read("current");
-//                if (user == null) {
-//                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-//                    startActivity(intent);
-//                } else {
-//                    showPopupMenu(v);
-//                }
-//            }
-
-//            private void showPopupMenu(View anchorView) {
-//                // Create a custom view for the popup menu
-//                View popupView = LayoutInflater.from(HomeActivity.this).inflate(R.layout.custom_popup_menu_acc, null);
-//
-//                // Initialize the popup window
-//                PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-//                setEventToPopup(popupView, popupWindow);
-//                // Show the popup window
-//                popupWindow.showAsDropDown(anchorView, 0, 0);
-//            }
-//
-//            private void setEventToPopup(View popupView, PopupWindow popupWindow) {
-//                popupView.findViewById(R.id.custom_menu_acc_change).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Paper.book().delete("current");
-//                        popupWindow.dismiss();
-//                        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-//                        startActivity(intent);
-//                    }
-//                });
-//            }
-//        });
 
         goYoutube.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,9 +180,11 @@ public class HomeActivity extends AppCompatActivity {
         User user = Paper.book().read("current");
         if (user != null) {
             popupView.findViewById(R.id.menu_change_acc).setVisibility(View.VISIBLE);
+            popupView.findViewById(R.id.menu_logout).setVisibility(View.VISIBLE);
             popupView.findViewById(R.id.menu_login).setVisibility(View.GONE);
         } else {
             popupView.findViewById(R.id.menu_change_acc).setVisibility(View.GONE);
+            popupView.findViewById(R.id.menu_logout).setVisibility(View.GONE);
             popupView.findViewById(R.id.menu_login).setVisibility(View.VISIBLE);
         }
         popupView.findViewById(R.id.menu_login).setOnClickListener(new View.OnClickListener() {
@@ -226,6 +193,12 @@ public class HomeActivity extends AppCompatActivity {
                 popupWindow.dismiss();
                 Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
                 startActivity(intent);
+            }
+        });
+        popupView.findViewById(R.id.menu_logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Paper.book().delete("current");
             }
         });
         popupView.findViewById(R.id.menu_change_acc).setOnClickListener(new View.OnClickListener() {
@@ -260,6 +233,13 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 startActivity(intent);
                 popupWindow.dismiss();
+            }
+        });
+        popupView.findViewById(R.id.menu_use_gg).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+                startActivity(intent);
             }
         });
     }

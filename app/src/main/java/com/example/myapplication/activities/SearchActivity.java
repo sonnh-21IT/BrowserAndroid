@@ -49,7 +49,6 @@ public class SearchActivity extends AppCompatActivity {
         if (search != null) {
             edtSearch.setText(search.trim());
         }
-
     }
 
     private void setStatusSearchBar(EditText editText, boolean isShow) {
@@ -107,6 +106,7 @@ public class SearchActivity extends AppCompatActivity {
                                     try {
                                         List<SearchResult> list = new ArrayList<>();
                                         // Xử lý kết quả JSON
+
                                         JSONArray items = response.getJSONArray("items");
                                         for (int i = 0; i < items.length(); i++) {
                                             JSONObject item = items.getJSONObject(i);
@@ -165,7 +165,7 @@ public class SearchActivity extends AppCompatActivity {
                                     // Xử lý khi gọi API thất bại
                                     Log.e("failure", "Status Code: " + statusCode, throwable);
                                 }
-                            });
+                            }, "vi");
                         }
                     }
                     return true;
