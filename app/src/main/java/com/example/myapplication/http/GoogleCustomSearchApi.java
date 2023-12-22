@@ -10,13 +10,17 @@ public class GoogleCustomSearchApi {
 
     private static final String BASE_URL = "https://www.googleapis.com/customsearch/v1";
 
-    public static void search(String query,int numberOfResults, JsonHttpResponseHandler responseHandler) {
+    public static void search(String query, int numberOfResults, JsonHttpResponseHandler responseHandler, String languageCode) {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("key", API_KEY);
         params.put("cx", SEARCH_ENGINE_ID);
         params.put("q", query);
         params.put("num", numberOfResults);
+
+        if (languageCode != null && !languageCode.isEmpty()) {
+            params.put("lr", "lang_"+languageCode);
+        }
 
         client.get(BASE_URL, params, responseHandler);
     }

@@ -158,6 +158,12 @@ public class BrowserActivity extends AppCompatActivity {
                 Toast.makeText(BrowserActivity.this, "custom_menu_show_main_content", Toast.LENGTH_SHORT).show();
             }
         });
+        popupView.findViewById(R.id.custom_menu_desktop_mode).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDesktopMode(webView, isDesktopMode);
+            }
+        });
     }
 
     private void initView() {
